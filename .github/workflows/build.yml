@@ -13,22 +13,22 @@ jobs:
 
       - name: Download Image Builder
         run: |
-          wget https://downloads.openwrt.org/releases/23.05.2/targets/ath79/nand/openwrt-imagebuilder-23.05.2-ath79-nand.Linux-x86_64.tar.xz
-          tar -xJf openwrt-imagebuilder-23.05.2-ath79-nand.Linux-x86_64.tar.xz
-          mv openwrt-imagebuilder-23.05.2-ath79-nand.Linux-x86_64 builder
+          wget https://downloads.openwrt.org/releases/23.05.2/targets/ath79/generic/openwrt-imagebuilder-23.05.2-ath79-generic.Linux-x86_64.tar.xz
+          tar -xJf openwrt-imagebuilder-23.05.2-ath79-generic.Linux-x86_64.tar.xz
+          mv openwrt-imagebuilder-23.05.2-ath79-generic.Linux-x86_64 builder
 
       - name: Validate Profile Exists
         run: |
           cd builder
           echo "--- Available GL.iNet profiles ---"
           make info | grep -i "glinet"
-          echo "--- Confirming x750v2 specifically ---"
-          make info | grep -i "x750" || echo "WARNING: x750 profile not found — check profile name above"
+          echo "--- Confirming x750 specifically ---"
+          make info | grep -i "x750" || echo "WARNING: x750 profile not found"
 
       - name: Build Firmware
         run: |
           cd builder
-          make image PROFILE="glinet_gl-x750v2" PACKAGES="luci luci-app-firewall luci-app-opkg \
+          make image PROFILE="glinet_gl-x750" PACKAGES="luci luci-app-firewall luci-app-opkg \
           kmod-usb-net-qmi-wwan kmod-usb-serial-option kmod-usb-serial-wwan \
           luci-proto-qmi \
           luci-app-watchcat \
@@ -39,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: openwrt-x750v2-custom
-          path: builder/bin/targets/ath79/nand/*.bin
+          path: builder/bin/targets/ath79/generic/*.bin

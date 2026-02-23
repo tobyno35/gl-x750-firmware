@@ -14,8 +14,8 @@ jobs:
       - name: Download Image Builder
         run: |
           wget https://downloads.openwrt.org/releases/23.05.2/targets/ath79/nand/openwrt-imagebuilder-23.05.2-ath79-nand.Linux-x86_64.tar.xz
-          tar -xJf openwrt-imagebuilder-*.tar.xz
-          mv openwrt-imagebuilder-* builder
+          tar -xJf openwrt-imagebuilder-23.05.2-ath79-nand.Linux-x86_64.tar.xz
+          mv openwrt-imagebuilder-23.05.2-ath79-nand.Linux-x86_64 builder
 
       - name: Validate Profile Exists
         run: |

@@ -1,0 +1,42 @@
+# gl-x750-firmware
+name: Build GL-X750V2 Firmware
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Image Builder
+        run: |
+          wget https://downloads.openwrt.org/releases/23.05.2/targets/ath79/nand/openwrt-imagebuilder-23.05.2-ath79-nand.Linux-x86_64.tar.xz
+          tar -xJf openwrt-imagebuilder-*.tar.xz
+          mv openwrt-imagebuilder-* builder
+
+      - name: Validate Profile Exists
+        run: |
+          cd builder
+          echo "--- Available GL.iNet profiles ---"
+          make info | grep -i "glinet"
+          echo "--- Confirming x750v2 specifically ---"
+          make info | grep -i "x750" || echo "WARNING: x750 profile not found — check profile name above"
+
+      - name: Build Firmware
+        run: |
+          cd builder
+          make image PROFILE="glinet_gl-x750v2" PACKAGES="luci luci-app-firewall luci-app-opkg \
+          kmod-usb-net-qmi-wwan kmod-usb-serial-option kmod-usb-serial-wwan \
+          luci-proto-qmi \
+          luci-app-watchcat \
+          luci-app-wireguard wireguard-tools \
+          -pppoe -odhcpd-ipv6only -kmod-ppp -kmod-pppoe"
+
+      - name: Upload Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-x750v2-custom
+          path: builder/bin/targets/ath79/nand/*.bin

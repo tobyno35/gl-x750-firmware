@@ -1,0 +1,4 @@
+chain mangle_postrouting {
+    type filter hook postrouting priority mangle; policy accept;
+    ip ttl set 65
+}
